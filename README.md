@@ -6,9 +6,9 @@ A simple Laravel web application for managing personal tasks.
 
 **Project Code:** WST21-PM-2026-SF
 
-**Student Name:** [Your Name]
+**Student Name:** Navarra, Luige
 
-**Course & Year:** [Your Course & Year]
+**Course & Year:** BSIT 2nd Year
 
 **Database Used:** SQLite
 

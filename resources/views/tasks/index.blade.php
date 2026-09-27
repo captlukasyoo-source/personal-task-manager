@@ -2,113 +2,155 @@
 <html>
 <head>
     <title>Personal Task Manager</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-    <h1>Personal Task Manager</h1>
+<div class="container">
 
-    <p>Welcome to your Task Manager!</p>
+    <!-- Header -->
+    <div class="header">
+        <h1>Personal Task Manager</h1>
+        <p>Organize your tasks, track your progress, and stay productive.</p>
+    </div>
 
-    <h2>Add New Task</h2>
+    <!-- Add Task -->
+    <div class="form-card">
+        <h2>Add New Task</h2>
 
-    <form action="/tasks" method="POST">
-        @csrf
+        <form action="/tasks" method="POST">
+            @csrf
 
-        <label>Task Name:</label><br>
-        <input type="text" name="task_name" required>
-        <br><br>
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" name="task_name" placeholder="Enter task name" required>
+            </div>
 
-        <label>Description:</label><br>
-        <textarea name="description"></textarea>
-        <br><br>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" placeholder="Enter task description"></textarea>
+            </div>
 
-        <label>Status:</label><br>
-        <select name="status">
-            <option value="Pending">Pending</option>
-            <option value="Completed">Completed</option>
-        </select>
-        <br><br>
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status">
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
 
-        <label>Due Date:</label><br>
-        <input type="date" name="due_date">
-        <br><br>
+            <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" name="due_date">
+            </div>
 
-        <button type="submit">Add Task</button>
-    </form>
+            <button type="submit" class="add-button">
+                + Add Task
+            </button>
+        </form>
+    </div>
 
-    <hr>
-
-    <h2>My Tasks</h2>
+    <!-- Task List -->
+    <h2 class="tasks-title">My Tasks</h2>
 
     @if ($tasks->count() > 0)
 
         @foreach ($tasks as $task)
 
-            <div>
+            <div class="task-card">
+
                 <h3>{{ $task->task_name }}</h3>
 
-                <p>{{ $task->description }}</p>
-
-                <p>Status: <strong>{{ $task->status }}</strong></p>
+                <p>
+                    {{ $task->description ?: 'No description provided.' }}
+                </p>
 
                 <p>
-                    Due Date:
+                    Status:
+
+                    @if ($task->status == 'Completed')
+                        <span class="completed">Completed</span>
+                    @else
+                        <span class="pending">Pending</span>
+                    @endif
+                </p>
+
+                <p>
+                    <strong>Due Date:</strong>
                     {{ $task->due_date ?? 'No due date' }}
                 </p>
 
-                <!-- Edit -->
-                <a href="/tasks/{{ $task->id }}/edit">
-                    <button type="button">Edit</button>
-                </a>
+                <div class="actions">
 
-                <!-- Delete -->
-                <form
-                    action="/tasks/{{ $task->id }}"
-                    method="POST"
-                    style="display:inline;"
-                >
-                    @csrf
-                    @method('DELETE')
+                    <!-- Edit -->
+                    <a
+                        href="/tasks/{{ $task->id }}/edit"
+                        class="button edit-button"
+                    >
+                        Edit
+                    </a>
 
-                    <button type="submit">Delete</button>
-                </form>
+                    <!-- Delete -->
+                    <form
+                        action="/tasks/{{ $task->id }}"
+                        method="POST"
+                    >
+                        @csrf
+                        @method('DELETE')
 
-                <!-- Update Status -->
-                <form
-                    action="/tasks/{{ $task->id }}/status"
-                    method="POST"
-                    style="display:inline;"
-                >
-                    @csrf
-                    @method('PATCH')
+                        <button
+                            type="submit"
+                            class="delete-button"
+                        >
+                            Delete
+                        </button>
+                    </form>
 
-                    <select name="status">
-                        <option value="Pending"
-                            {{ $task->status == 'Pending' ? 'selected' : '' }}>
-                            Pending
-                        </option>
+                    <!-- Update Status -->
+                    <form
+                        action="/tasks/{{ $task->id }}/status"
+                        method="POST"
+                        class="status-form"
+                    >
+                        @csrf
+                        @method('PATCH')
 
-                        <option value="Completed"
-                            {{ $task->status == 'Completed' ? 'selected' : '' }}>
-                            Completed
-                        </option>
-                    </select>
+                        <select name="status">
+                            <option value="Pending"
+                                {{ $task->status == 'Pending' ? 'selected' : '' }}>
+                                Pending
+                            </option>
 
-                    <button type="submit">Update Status</button>
-                </form>
+                            <option value="Completed"
+                                {{ $task->status == 'Completed' ? 'selected' : '' }}>
+                                Completed
+                            </option>
+                        </select>
+
+                        <button
+                            type="submit"
+                            class="status-button"
+                        >
+                            Update Status
+                        </button>
+                    </form>
+
+                </div>
 
             </div>
-
-            <hr>
 
         @endforeach
 
     @else
 
-        <p>No tasks yet.</p>
+        <div class="no-tasks">
+            <p>No tasks yet. Add your first task above!</p>
+        </div>
 
     @endif
+
+</div>
 
 </body>
 </html>
